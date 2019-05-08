@@ -1,2 +1,2 @@
 # Face-Detection
-GIven an image identify a human face
+Given image, return an image with human face delimited by a square.
