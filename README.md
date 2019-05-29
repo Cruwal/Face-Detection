@@ -26,25 +26,26 @@ This project focuses on a solution to the face detection problem with a system b
 
 5\: Evaluate features of the blocks;
 
-6\: Use features values into a Backpropagation Neural Network (BPN) to classify the block as face or non-face.
+6\: Use features values into a Backpropagation Neural Network (BPN) to classify the block as face or non-face;
 
-7\: Display the image with squares delimiting the faces
+7\: Display the image with squares delimiting the faces.
 
 ### Input example
 
 The input is represented by an image containing one or more faces. The image can be either grayscale or colored. 
-The following is an example of an input image
+The following is an example of an input image.
 
 ![alt text](https://files.realpython.com/media/bla2.5577e4ec1f8e.jpg)
 
 ### Output example (objective)
 
-The following is an example of the desired output image, based on the previous input image
+The following is an example of the desired output image, based on the previous input image.
 
 ![alt text](https://files.realpython.com/media/bla3.0a8b11f62c76.jpg)
 
 
 ## References
 
-S. Anila and N. Devarajan. (2010). Simple and Fast Face Detection System Based on Edges. International Journey of Universal Computer Sciences (Vol.1-2010/Iss.2), pp. 54-58
+S. Anila and N. Devarajan. (2010). Simple and Fast Face Detection System Based on Edges. International Journey of Universal Computer Sciences (Vol.1-2010/Iss.2), pp. 54-58.
+
 Traditional Face Detection With Python: https://realpython.com/traditional-face-detection-python/
