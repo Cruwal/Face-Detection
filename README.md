@@ -8,7 +8,7 @@
 ## Abstract
 
 This project intends to identify human faces in images using techniques of image processing, such as image segmentation and image enhancement. The project application is computational photography, applying the results in autofocus in cameras.
-Given an image containing one or more faces of people, the same image is returned with squares delimiting the faces contained in it.
+Thus, given an image containing one or more faces of people, the same image is returned with squares delimiting the faces contained in it.
 
 ## Description
 
