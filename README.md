@@ -1,13 +1,16 @@
 # Face Detection Using Edge Base
 
-- In construction
+## Authors
 
-**Gabriel Mattheus Bezerra Alves de Carvalho and  Wallace Cruz de Souza**.
+- Gabriel Mattheus Bezerra Alves de Carvalho (@GabrielBCarvalho)
+- Wallace Cruz de Souza (@Cruwal)
 
-## Project
+### Abstract
 
 This project intends to identify human faces in images using techniques of image processing, such as image segmentation and image enhancement. The project application is computational photography, applying the results in autofocus in cameras.
-Given image, return an image with human face delimited by a square.
+Given an image containing one or more faces of people, the same image is returned with squares delimiting the faces contained in it.
+
+## Project 
 
 ### Steps
 
@@ -22,3 +25,5 @@ Given image, return an image with human face delimited by a square.
 5\: Evaluate features of the blocks;
 
 6\: Use features values into a Backpropagation Neural Network (BPN) to classify the block as face or non-face.
+
+7\: Display the image with squares delimiting the faces
