@@ -21,4 +21,4 @@ Given image, return an image with human face delimited by a square.
 
 5\: Evaluate features of the blocks;
 
-6\: Use features values into a Back Propagation Neural Network (BPN) to classify the block as face or non-face.
+6\: Use features values into a Backpropagation Neural Network (BPN) to classify the block as face or non-face.
