@@ -1,4 +1,4 @@
-# Face Detection Using Edge Base
+# Face Detection
 
 ### Authors
 
@@ -11,6 +11,8 @@ This project intends to identify human faces in images using techniques of image
 Given an image containing one or more faces of people, the same image is returned with squares delimiting the faces contained in it.
 
 ## Description
+
+This project focuses on a solution to the face detection problem with a system based on edges. The main steps are presented below, and are mainly inspired by the work of S. Anila and N. Devarajan (2010).
 
 ### Steps
 
@@ -42,5 +44,7 @@ The following is an example of the desired output image, based on the previous i
 ![alt text](https://files.realpython.com/media/bla3.0a8b11f62c76.jpg)
 
 
-#### Images references
+## References
+
+S. Anila and N. Devarajan. (2010). Simple and Fast Face Detection System Based on Edges. International Journey of Universal Computer Sciences (Vol.1-2010/Iss.2), pp. 54-58
 Traditional Face Detection With Python: https://realpython.com/traditional-face-detection-python/
