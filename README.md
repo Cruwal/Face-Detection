@@ -11,14 +11,14 @@ Given image, return an image with human face delimited by a square.
 
 ### Steps
 
-1\. Remove noise using median filter
+1\: Remove noise using median filter
 
-2\. Contrast adjustment using histogram equalization
+2\: Contrast adjustment using histogram equalization
 
-3\. Construct the edge image applying sobel operator
+3\: Construct the edge image applying sobel operator
 
-4\. Segment image into blocks
+4\: Segment image into blocks
 
-5\. Evaluate features of the blocks
+5\: Evaluate features of the blocks
 
-6\. Use features values into a Backpropagation Neural Network (BPN) to classify the block as face or non-face
+6\: Use features values into a Backpropagation Neural Network (BPN) to classify the block as face or non-face
