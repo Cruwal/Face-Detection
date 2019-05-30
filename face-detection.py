@@ -17,17 +17,21 @@ def main():
     # Original image
     image_input = io.imread(filename)
     # Grayscale image
-    image = io.imread(filename, as_gray = True)
+    image = io.imread(filename, as_gray = True).astype(int)
 
     # Apply 2D Median Filter
-    image = two_d_median_filter(3, image)
+    image = two_d_median_filter(3, image).astype(int)
 
     # Apply Histogram Equalization
     image = histogram_equalization(image)
+    
+    norm_image = normalize(image, 255)
 
+    # plt.imshow(image)
+    # plt.show()
 
     # write the result image
-    imageio.imwrite("result.jpg", image)
+    imageio.imwrite("result.jpg", norm_image)
     return True
 
 # 2D Median Filter
@@ -70,19 +74,31 @@ def histogram_equalization(image):
 
     # Calculate the cumulative histogram
     cumulative = 0
-    for i in range(vector_bin.shape):
+    for i in range(vector_bin.shape[0]):
         cumulative += vector_bin[i]
         vector_bin[i] = cumulative 
     
     # Calculate the histogram equalisation    
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):
-            output_image[i][j] = vector_bin[image[i][j]] * ((Max_pixel_value - 1) / (image.shape[0] * image.shape[1]))
+            output_image[i][j] = vector_bin[image[i][j]] * ((max_pixel_value - 1) / (image.shape[0] * image.shape[1]))
 
     return output_image
 
     
+# Normalizing the image into a range of (0, value)
+def normalize(img, value):
+    img_norm = np.zeros(img.shape)
+    imin = np.min(img)
+    imax = np.max(img)
 
+    img_norm = (img - imin)/(imax - imin)
+    img_norm = (img_norm * value)
+    return img_norm
+
+def sobel_operator(image):
+    #TODO
+    return image
 
 
 # Call Main function
