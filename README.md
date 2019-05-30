@@ -45,9 +45,15 @@ The following is an example of the desired output image, based on the previous i
 
 
 # Current Status
+
+At the moment, the input image is already being read, and then the Median Filter is applied to remove noise. Besides that, contrast adjustment is made using Histogram Equalization.
+The image below represents an example of an input file.
+
 ![Screenshot](images/scarlett.jpg)
+
+The image below, however, represents the application of the filters in the previous image.
+
 ![Screenshot](images/result.jpg)
-Image after median filter and histogram equalization
 
 
 ## References
