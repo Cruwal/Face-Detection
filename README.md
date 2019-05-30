@@ -44,6 +44,9 @@ The following is an example of the desired output image, based on the previous i
 ![alt text](https://files.realpython.com/media/bla3.0a8b11f62c76.jpg)
 
 
+# Parcial Results
+![Screenshot](images/scarlett.jpg)
+
 ## References
 
 S. Anila and N. Devarajan. (2010). Simple and Fast Face Detection System Based on Edges. International Journey of Universal Computer Sciences (Vol.1-2010/Iss.2), pp. 54-58.
