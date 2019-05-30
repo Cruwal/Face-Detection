@@ -12,7 +12,7 @@ Thus, given an image containing one or more faces of people, the same image is r
 
 ## Description
 
-This project focuses on a solution to the face detection problem with a system based on edges. The main steps are presented below, and are mainly inspired by the work of S. Anila and N. Devarajan (2010).
+This project focuses on a solution to the face detection problem with a system based on edges. The main steps are presented below, and are mainly inspired by the work of S. Anila and N. Devarajan (2010). In addition, the dataset used for neural network training is currently "The MUCT Face Database", available at https://github.com/StephenMilborrow/muct
 
 ### Steps
 
@@ -61,3 +61,5 @@ The image below, however, represents the application of the filters in the previ
 S. Anila and N. Devarajan. (2010). Simple and Fast Face Detection System Based on Edges. International Journey of Universal Computer Sciences (Vol.1-2010/Iss.2), pp. 54-58.
 
 Traditional Face Detection With Python: https://realpython.com/traditional-face-detection-python/
+
+The MUCT Face Database: https://github.com/StephenMilborrow/muct
