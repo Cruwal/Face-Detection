@@ -44,8 +44,11 @@ The following is an example of the desired output image, based on the previous i
 ![alt text](https://files.realpython.com/media/bla3.0a8b11f62c76.jpg)
 
 
-# Parcial Results
+# Current Status
 ![Screenshot](images/scarlett.jpg)
+![Screenshot](images/result.jpg)
+Image after median filter and histogram equalization
+
 
 ## References
 
