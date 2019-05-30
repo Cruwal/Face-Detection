@@ -22,6 +22,12 @@ def main():
     # Apply 2D Median Filter
     image = two_d_median_filter(3, image)
 
+    # Apply Histogram Equalization
+    image = histogram_equalization(image)
+
+
+    # write the result image
+    imageio.imwrite("result.jpg", image)
     return True
 
 # 2D Median Filter
@@ -50,4 +56,34 @@ def two_d_median_filter(n, image):
 
     return output_image
 
+
+def histogram_equalization(image):
+    max_pixel_value = 256
+    vector_bin = np.zeros(max_pixel_value, dtype = int)
+
+    output_image = np.zeros(image.shape, dtype = float)
+
+    # Calculate the histogram
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            vector_bin[image[i][j]] += 1 
+
+    # Calculate the cumulative histogram
+    cumulative = 0
+    for i in range(vector_bin.shape):
+        cumulative += vector_bin[i]
+        vector_bin[i] = cumulative 
+    
+    # Calculate the histogram equalisation    
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            output_image[i][j] = vector_bin[image[i][j]] * ((Max_pixel_value - 1) / (image.shape[0] * image.shape[1]))
+
+    return output_image
+
+    
+
+
+
+# Call Main function
 main()
