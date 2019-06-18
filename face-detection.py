@@ -26,9 +26,10 @@ def main():
     image = histogram_equalization(image)
     
     norm_image = normalize(image, 255)
-
-    # plt.imshow(image)
-    # plt.show()
+    sobel_image = sobel_operator(image)
+    #print(sobel_image)
+    plt.imshow(sobel_image)
+    plt.show()
 
     # write the result image
     imageio.imwrite("result.jpg", norm_image)
@@ -97,9 +98,29 @@ def normalize(img, value):
     return img_norm
 
 def sobel_operator(image):
-    #TODO
-    return image
+    '''
+    gx_aux = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+    gy_aux = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
+    gx = np.empty(shape = image.shape, dtype = float)
+    gy = np.empty(shape = image.shape, dtype = float)
+    #gy = gy_aux * image
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
+            gx[x][y] = gx_aux * image[x][y]
+            gy[x][y] = gy_aux * image[x][y]
+'''
+    gx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+    gy = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
+    output_image = np.zeros(shape = image.shape)
 
+    for i in range(1, image.shape[0] - 2):
+        for j in range(1, image.shape[1] - 2):
+            s1 = np.sum(np.sum(gx * image[i: i+3, j: j+3]))
+            s2 = np.sum(np.sum(gy * image[i: i+3, j: j+3]))
+
+            output_image[i+1, j+1] = np.sqrt(s1**2 + s2**2)
+    
+    return output_image
 
 # Call Main function
 main()
