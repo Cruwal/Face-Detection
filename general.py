@@ -105,11 +105,10 @@ def edge_tracking_algorithm(image, mode):
                                 subwindow = image[top_left[0]:bottom_left[0] + 1, top_right[1]:bottom_right[1]]
                                 # TODO: Call Integral image to get features
                                 # features = integral_image()
-                                if(mode == 0):      # Classify manually subwindow
-                                    classify_manually_subwindow(subwindow, features)
-                return False
-        return False
-    return False
+                                mean = np.mean(subwindow)
+                                if(mean != 0):
+                                    if(mode == 0):      # Classify manually subwindow
+                                        classify_manually_subwindow(subwindow, features)
 
 
 # Normalizing the image into a range of (0, value)
