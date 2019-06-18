@@ -16,7 +16,7 @@ from general import *
 
 def main():
     for filename in os.listdir('images'):
-        image = io.imread(filename, as_gray = True).astype(int)
+        image = io.imread("images/" + filename, as_gray = True).astype(int)
 
         # Apply 2D Median Filter
         image = two_d_median_filter(3, image).astype(int)
@@ -25,32 +25,13 @@ def main():
         image = histogram_equalization(image)
 
         # Apply sobel algorithm
-        norm_image = normalize(image, 255)
+        #norm_image = normalize(image, 255)
         sobel_image = sobel_operator(image)
-
+        # write the result image
+        imageio.imwrite("result.jpg", sobel_image)
+        #print(sobel_image)
         # Apply Edge Tracking Algorithm
-        edge_tracking_algorithm(image)
+        edge_tracking_algorithm(sobel_image, mode = 0)
 
 
-def classify_manually_subwindow(subwindow, features):
-    fp = open(r"dataset.data", "a")
-    
-    # Ploting image
-    plt.imshow(subwindow)
-    plt.show()
-
-    # Generating line on dataset
-    for i in range(len(features)):
-        fp.write(str(features[i]))
-        fp.write(",")
-
-    # Assigning the subregion as a face or not
-    print("Is it a face? y/n")
-    c = str(input())
-    if(c == "y"):
-        fp.write("1 \n")
-    else:
-        fp.write("0 \n")
-
-    fp.close()
-    return True
+main()

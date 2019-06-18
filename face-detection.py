@@ -58,55 +58,5 @@ def train_classifier():
     
     return mlp
 
-# Generate the integral image for feature extraction
-def integral_image_algorithm(image):
-    new_image = np.zeros(image.shape, dtype=int)
-
-    for x in range(image.shape[0]):
-        for y in range(image.shape[1]):
-            new_image[x][y] = np.sum(image[0 : x + 1, 0 : y + 1])
-
-    return new_image        
-
-def feature_extraction(image):
-    integral_image = integral_image_algorithm(image)
-
-    horizontal_middle = image.shape[0] // 2
-    vertical_middle = image.shape[1] // 2
-
-    # horizontal feature
-    aux = np.sum(integral_image[0 : horizontal_middle, 0 : image.shape[1]]) 
-    aux1 = np.sum(integral_image[horizontal_middle : image.shape[0], 0 : image.shape[1]])
-    horizontal_feature = aux - aux1
-
-    # vertical feature
-    aux = np.sum(integral_image[0 : image.shape[0], 0 : vertical_middle])
-    aux1 = np.sum(integral_image[0 : image.shape[0], vertical_middle : image.shape[1]])
-    vertical_feature = aux1 - aux
-
-    # Sum first diagonal
-    diag = np.sum(integral_image[0 : horizontal_middle, 0 : vertical_middle])
-    diag1 = np.sum(integral_image[horizontal_middle : image.shape[0], vertical_middle : image.shape[1]])
-    diag = diag + diag1
-    
-    # Sum second diagonal
-    diag2 = np.sum(integral_image[0 : horizontal_middle, vertical_middle : image.shape[1]])
-    diag1 = np.sum(integral_image[horizontal_middle : image.shape[0], 0 : vertical_middle])
-    diag1 = diag1 + diag2
-
-    # Subtract diagonals
-    diag_feature = diag1 - diag
-
-    # Tree vertical
-    tree_div = image.shape[1] // 3
-    vertical_p1 = np.sum(integral_image[0 : image.shape[0], 0 : tree_div])
-    vertical_center = np.sum(integral_image[0 : image.shape[0], tree_div : 2 * tree_div + 1])
-    vertical_p2 = np.sum(integral_image[0 : image.shape[0], 2 * tree_div + 1 : image.shape[1]])
-
-    tree_vertical_feature = vertical_center - vertical_p1 + vertical_p2
-
-    result = np.array([horizontal_feature, vertical_feature, diag_feature, tree_vertical_feature])
-    return result
-
 
 main()
