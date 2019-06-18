@@ -27,12 +27,14 @@ def main():
     
     norm_image = normalize(image, 255)
     sobel_image = sobel_operator(image)
-    #print(sobel_image)
+    
     plt.imshow(sobel_image)
     plt.show()
 
+    edge_track_algorithm(image)
+
     # write the result image
-    imageio.imwrite("result.jpg", norm_image)
+    imageio.imwrite("result.jpg", sobel_image)
     return True
 
 # 2D Median Filter
@@ -86,29 +88,8 @@ def histogram_equalization(image):
 
     return output_image
 
-    
-# Normalizing the image into a range of (0, value)
-def normalize(img, value):
-    img_norm = np.zeros(img.shape)
-    imin = np.min(img)
-    imax = np.max(img)
-
-    img_norm = (img - imin)/(imax - imin)
-    img_norm = (img_norm * value)
-    return img_norm
-
+# Apply the sobel operator at a given image
 def sobel_operator(image):
-    '''
-    gx_aux = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
-    gy_aux = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
-    gx = np.empty(shape = image.shape, dtype = float)
-    gy = np.empty(shape = image.shape, dtype = float)
-    #gy = gy_aux * image
-    for x in range(image.shape[0]):
-        for y in range(image.shape[1]):
-            gx[x][y] = gx_aux * image[x][y]
-            gy[x][y] = gy_aux * image[x][y]
-'''
     gx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
     gy = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
     output_image = np.zeros(shape = image.shape)
@@ -120,7 +101,31 @@ def sobel_operator(image):
 
             output_image[i+1, j+1] = np.sqrt(s1**2 + s2**2)
     
+    threshold = 70 #%varies for application [0 255]
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
+            #output_image[x][y] = np.max(output_image[x][y], threshold)
+            if(output_image[x][y] < threshold):
+                output_image[x][y] = 0
+	
     return output_image
+    
+
+# Apply Edge Tracking Algorithm
+def edge_track_algorithm(image):
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
+            return True
+
+# Normalizing the image into a range of (0, value)
+def normalize(img, value):
+    img_norm = np.zeros(img.shape)
+    imin = np.min(img)
+    imax = np.max(img)
+
+    img_norm = (img - imin)/(imax - imin)
+    img_norm = (img_norm * value)
+    return img_norm
 
 # Call Main function
 main()
