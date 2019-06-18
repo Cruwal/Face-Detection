@@ -27,7 +27,7 @@ def main():
     
     norm_image = normalize(image, 255)
     sobel_image = sobel_operator(image)
-    
+
     plt.imshow(sobel_image)
     plt.show()
 
@@ -116,6 +116,18 @@ def edge_track_algorithm(image):
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):
             return True
+
+# Generate the integral image for feature extraction
+def integral_image(image):
+    new_image = np.zeros(image.shape, dtype=int)
+
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
+            new_image[x][y] = np.sum(image[0 : x + 1, 0 : y + 1])
+
+    return new_image        
+
+
 
 # Normalizing the image into a range of (0, value)
 def normalize(img, value):
