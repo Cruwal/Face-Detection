@@ -76,7 +76,7 @@ def sobel_operator(image):
 
             output_image[i+1, j+1] = np.sqrt(s1**2 + s2**2)
     
-    threshold = 100 #%varies for application [0 255]
+    threshold = 220 #%varies for application [0 255]
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):
             #output_image[x][y] = np.max(output_image[x][y], threshold)
@@ -91,9 +91,8 @@ def edge_tracking_algorithm(image, mode, mlp, a):
     normalized_image = normalize(image, 1)
     print(normalized_image)
     counter = 0
-    regions = []
-    for x in range(50, image.shape[0]):
-        for y in range(100, image.shape[1]):
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
             if(image[x][y] != 0):
                 top_left = (x, y)
                 for j in range(y, image.shape[1]):
@@ -113,29 +112,18 @@ def edge_tracking_algorithm(image, mode, mlp, a):
                                         if(mode == 0):      # Classify manually subwindow
                                             classify_manually_subwindow(subwindow, features)
                                         elif(mode == 1):    # Check if the result is a face
-                                            #features = np.asarray(a[counter]).reshape(1, -1)
+                                            features = np.asarray(a[counter]).reshape(1, -1)
                                             print(counter)
-                                            features = features.reshape(1, -1)
                                             counter += 1
-                                            b = np.append(a, features, axis = 0)
-                                            b = normalize(b, 1)
                                             #features = normalize(features, 1).reshape(1, -1)
-                                            features = np.asarray(b[b.shape[0] - 1]).reshape(1, -1)
-                                            #a = np.delete(a, a.shape[0] - 1, 0)
                                             #features = features.reshape(1, -1)
                                             print(features)
-                                            print(a)
                                             y = mlp.predict(features)
                                             print(y[0])
                                             if(y[0] == 1):
                                                 # Ploting image
                                                 plt.imshow(subwindow)
                                                 plt.show()
-                                                region = [top_left, top_right, bottom_left, bottom_right]
-                                                regions.append(region)
-                                                if(counter >= 1500):
-                                                    return regions
-    return regions
 
 # Generate the integral image for feature extraction
 def integral_image_algorithm(image):

@@ -25,7 +25,7 @@ def main():
     # Reading filename and opening the image
     #filename = str(input()).rstrip()
     # Original image
-    filename = "BioID_0194.pgm"
+    filename = "BioID_0000.pgm"
     image_input = io.imread(filename)
     # Grayscale image
     image = io.imread(filename, as_gray = True).astype(int)
@@ -42,12 +42,12 @@ def main():
     #plt.show()
 
     # Get the MLP Classifier
-    mlp, x, a = train_classifier()
+    mlp, x = train_classifier()
     # Ploting image
     plt.imshow(sobel_image)
     plt.show()
     # Apply Edge Tracking Algorithm
-    regions = edge_tracking_algorithm(sobel_image, 1, mlp, a)
+    edge_tracking_algorithm(sobel_image, 1, mlp, x)
 
     # write the result image
     #imageio.imwrite("result.jpg", sobel_image)
@@ -60,15 +60,14 @@ def train_classifier():
     #x = dataset[:, [0, 1, 2, 3]]
     #y = dataset[:, 4]
     x = dataset[:, 0:4]
-    a = x
     y = dataset[:, 4]
     print(x)
     print(y)
     # Train the MLP Classifier
     x = normalize(x, 1)
-    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
+    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(100,), activation = 'logistic', max_iter = 400, tol = 1e-4, learning_rate_init = 0.001)
     mlp = mlp.fit(x, y)
-    return mlp, x, a
+    return mlp, x
 
     '''
     skf = StratifiedKFold(n_splits=10)
@@ -104,23 +103,6 @@ def train_classifier():
     
     return mlp
 
-def define_face(image, xmin, xmax, ymin, ymax):
-    value = 255
 
-    face_image = np.copy(image)
-
-    # defining the top of rectangle
-    face_image[xmin, ymin : ymax + 1] = value
-
-    # defining the bottom of rectangle
-    face_image[xmax, ymin : ymax + 1] = value
-
-    # defining the left of rectangle
-    face_image[xmin : xmax + 1, ymin] = value
-
-    # defining the right side of rectangle
-    face_image[xmin : xmax + 1, ymax] = value
-
-    return face_image
 
 main()
