@@ -26,9 +26,13 @@ def main():
     #filename = str(input()).rstrip()
     # Original image
     filename = "BioID_0194.pgm"
-    image_input = io.imread(filename)
+    #image_input = io.imread(filename)
     # Grayscale image
     image = io.imread(filename, as_gray = True).astype(int)
+    image_input = io.imread(filename, as_gray = True).astype(int)
+    # Ploting image
+    plt.imshow(image_input)
+    plt.show()
     # Apply 2D Median Filter
     image = two_d_median_filter(3, image).astype(int)
 
@@ -43,12 +47,14 @@ def main():
 
     # Get the MLP Classifier
     mlp, x, a = train_classifier()
-    # Ploting image
-    plt.imshow(sobel_image)
-    plt.show()
+    
     # Apply Edge Tracking Algorithm
     regions = edge_tracking_algorithm(sobel_image, 1, mlp, a)
 
+    output_image = define_face(image_input, regions[len(regions)-1][0][0], regions[len(regions)-1][2][0], regions[len(regions)-1][2][1], regions[len(regions)-1][1][1])
+    # Ploting image
+    plt.imshow(output_image)
+    plt.show()
     # write the result image
     #imageio.imwrite("result.jpg", sobel_image)
     return True    
@@ -56,14 +62,14 @@ def main():
 
 def train_classifier():
     dataset = pd.read_csv('dataset.data', sep = ',').values
-    print(dataset)
+    #print(dataset)
     #x = dataset[:, [0, 1, 2, 3]]
     #y = dataset[:, 4]
     x = dataset[:, 0:4]
     a = x
     y = dataset[:, 4]
-    print(x)
-    print(y)
+    #print(x)
+    #print(y)
     # Train the MLP Classifier
     x = normalize(x, 1)
     mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)

@@ -88,8 +88,9 @@ def sobel_operator(image):
 
 # Apply Edge Tracking Algorithm
 def edge_tracking_algorithm(image, mode, mlp, a):
+    print("Searching faces...")
     normalized_image = normalize(image, 1)
-    print(normalized_image)
+    #print(normalized_image)
     counter = 0
     regions = []
     for x in range(50, image.shape[0]):
@@ -105,7 +106,7 @@ def edge_tracking_algorithm(image, mode, mlp, a):
                                 bottom_right = (i, j) #image[x][j]
                                 subwindow = image[top_left[0]:bottom_left[0] + 1, top_left[1]:top_right[1] + 1]
                                 normalized_subwindow = normalized_image[top_left[0]:bottom_left[0] + 1, top_left[1]:top_right[1] + 1]
-                                print(subwindow.shape)
+                                #print(subwindow.shape)
                                 if(subwindow.shape[0] > 43 and subwindow.shape[1] > 58):
                                     mean = np.mean(subwindow)
                                     if(mean != 0):
@@ -114,7 +115,7 @@ def edge_tracking_algorithm(image, mode, mlp, a):
                                             classify_manually_subwindow(subwindow, features)
                                         elif(mode == 1):    # Check if the result is a face
                                             #features = np.asarray(a[counter]).reshape(1, -1)
-                                            print(counter)
+                                            #print(counter)
                                             features = features.reshape(1, -1)
                                             counter += 1
                                             b = np.append(a, features, axis = 0)
@@ -123,17 +124,18 @@ def edge_tracking_algorithm(image, mode, mlp, a):
                                             features = np.asarray(b[b.shape[0] - 1]).reshape(1, -1)
                                             #a = np.delete(a, a.shape[0] - 1, 0)
                                             #features = features.reshape(1, -1)
-                                            print(features)
-                                            print(a)
-                                            y = mlp.predict(features)
-                                            print(y[0])
-                                            if(y[0] == 1):
+                                            #print(features)
+                                            #print(a)
+                                            r = mlp.predict(features)
+                                            #print(y[0])
+                                            #print("(", x, ",", y, ")")
+                                            if(r[0] == 1):
                                                 # Ploting image
-                                                plt.imshow(subwindow)
-                                                plt.show()
+                                                #plt.imshow(subwindow)
+                                                #plt.show()
                                                 region = [top_left, top_right, bottom_left, bottom_right]
                                                 regions.append(region)
-                                                if(counter >= 1500):
+                                                if(counter > 15):
                                                     return regions
     return regions
 
