@@ -36,6 +36,8 @@ def main():
         plt.imshow(sobel_image)
         plt.show()
 
+        # defined_image = define_face(sobel_image, 50, 200, 50, 300)
+        # imageio.imwrite("result.jpg", defined_image)
         edge_tracking_algorithm(sobel_image, mode = 0)
 
 

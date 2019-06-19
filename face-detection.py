@@ -38,7 +38,7 @@ def main():
     #plt.show()
 
     # Apply Edge Tracking Algorithm
-    edge_tracking_algorithm(image)
+    edge_tracking_algorithm(sobel_image)
 
     # Get the MLP Classifier
     clf = train_classifier()
