@@ -87,7 +87,7 @@ def sobel_operator(image):
 
 
 # Apply Edge Tracking Algorithm
-def edge_tracking_algorithm(image, mode, mlp):
+def edge_tracking_algorithm(image, mode, mlp, a):
     normalized_image = normalize(image, 1)
     print(normalized_image)
     counter = 0
@@ -112,9 +112,12 @@ def edge_tracking_algorithm(image, mode, mlp):
                                         if(mode == 0):      # Classify manually subwindow
                                             classify_manually_subwindow(subwindow, features)
                                         elif(mode == 1):    # Check if the result is a face
+                                            features = np.asarray(a[counter]).reshape(1, -1)
                                             print(counter)
                                             counter += 1
-                                            features = normalize(features, 1).reshape(1, -1)
+                                            #features = normalize(features, 1).reshape(1, -1)
+                                            #features = features.reshape(1, -1)
+                                            print(features)
                                             y = mlp.predict(features)
                                             print(y[0])
                                             if(y[0] == 1):
@@ -171,7 +174,6 @@ def feature_extraction(image):
     tree_vertical_feature = vertical_center - vertical_p1 + vertical_p2
 
     result = np.array([horizontal_feature, vertical_feature, diag_feature, tree_vertical_feature])
-    print(result)
     return result
 
 
