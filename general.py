@@ -185,7 +185,24 @@ def normalize(img, value):
     img_norm = (img_norm * value)
     return img_norm
 
+def define_face(image, xmin, xmax, ymin, ymax):
+    value = 255
 
+    face_image = np.copy(image)
+
+    # defining the top of rectangle
+    face_image[xmin, ymin : ymax + 1] = value
+
+    # defining the bottom of rectangle
+    face_image[xmax, ymin : ymax + 1] = value
+
+    # defining the left of rectangle
+    face_image[xmin : xmax + 1, ymin] = value
+
+    # defining the right side of rectangle
+    face_image[xmin : xmax + 1, ymax] = value
+
+    return face_image
 
 
 
