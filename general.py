@@ -76,7 +76,7 @@ def sobel_operator(image):
 
             output_image[i+1, j+1] = np.sqrt(s1**2 + s2**2)
     
-    threshold = 100 #%varies for application [0 255]
+    threshold = 220 #%varies for application [0 255]
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):
             #output_image[x][y] = np.max(output_image[x][y], threshold)
@@ -88,31 +88,32 @@ def sobel_operator(image):
 
 # Apply Edge Tracking Algorithm
 def edge_tracking_algorithm(image, mode):
+    normalized_image = normalize(image, 1)
+    print(normalized_image)
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):
             if(image[x][y] != 0):
                 top_left = (x, y)
                 for j in range(y, image.shape[1]):
-                    if(image[x][j] != 0):
-                        if((j - y) > 50):
-                            top_right = (x, j)
-                            for i in range(x, image.shape[0]):
-                                if(image[i][j] != 0):
-                                    if((i - x) > 50):
-                                        bottom_left = (i, y) #image[i][j]
-                                        bottom_right = (i, j) #image[x][j]
-                                        subwindow = image[top_left[0]:bottom_left[0] + 1, top_left[1]:top_right[1] + 1]
-                                        print(subwindow.shape)
-                                        if(subwindow.shape[0] > 50 and subwindow.shape[1] > 50):
-                                            features = feature_extraction(subwindow)
-                                            mean = np.mean(subwindow)
-                                            if(mean != 0):
-                                                if(mode == 0):      # Classify manually subwindow
-                                                    classify_manually_subwindow(subwindow, features)
+                    if((image[x][j] != 0) and ((j - y) > 58)):
+                        top_right = (x, j)
+                        for i in range(x, image.shape[0]):
+                            if((image[i][j] != 0) and ((i - x) > 43)):
+                                bottom_left = (i, y) #image[i][j]
+                                bottom_right = (i, j) #image[x][j]
+                                subwindow = image[top_left[0]:bottom_left[0] + 1, top_left[1]:top_right[1] + 1]
+                                normalized_subwindow = normalized_image[top_left[0]:bottom_left[0] + 1, top_left[1]:top_right[1] + 1]
+                                print(subwindow.shape)
+                                if(subwindow.shape[0] > 43 and subwindow.shape[1] > 58):
+                                    mean = np.mean(subwindow)
+                                    if(mean != 0):
+                                        features = feature_extraction(normalized_subwindow)
+                                        if(mode == 0):      # Classify manually subwindow
+                                            classify_manually_subwindow(subwindow, features)
 
 # Generate the integral image for feature extraction
 def integral_image_algorithm(image):
-    new_image = np.zeros(image.shape, dtype=int)
+    new_image = np.zeros(image.shape, dtype=float)
 
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):

@@ -28,9 +28,14 @@ def main():
         #norm_image = normalize(image, 255)
         sobel_image = sobel_operator(image)
         # write the result image
-        imageio.imwrite("result.jpg", sobel_image)
+        #imageio.imwrite("result.jpg", sobel_image)
         #print(sobel_image)
         # Apply Edge Tracking Algorithm
+
+        # Ploting image
+        plt.imshow(sobel_image)
+        plt.show()
+
         edge_tracking_algorithm(sobel_image, mode = 0)
 
 
