@@ -87,9 +87,10 @@ def sobel_operator(image):
 
 
 # Apply Edge Tracking Algorithm
-def edge_tracking_algorithm(image, mode):
+def edge_tracking_algorithm(image, mode, mlp):
     normalized_image = normalize(image, 1)
     print(normalized_image)
+    counter = 0
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):
             if(image[x][y] != 0):
@@ -110,6 +111,16 @@ def edge_tracking_algorithm(image, mode):
                                         features = feature_extraction(normalized_subwindow)
                                         if(mode == 0):      # Classify manually subwindow
                                             classify_manually_subwindow(subwindow, features)
+                                        elif(mode == 1):    # Check if the result is a face
+                                            print(counter)
+                                            counter += 1
+                                            features = normalize(features, 1).reshape(1, -1)
+                                            y = mlp.predict(features)
+                                            print(y[0])
+                                            if(y[0] == 1):
+                                                # Ploting image
+                                                plt.imshow(subwindow)
+                                                plt.show()
 
 # Generate the integral image for feature extraction
 def integral_image_algorithm(image):

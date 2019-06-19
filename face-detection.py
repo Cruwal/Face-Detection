@@ -32,31 +32,40 @@ def main():
     image = histogram_equalization(image)
     
     norm_image = normalize(image, 255)
-    sobel_image = sobel_operator(image)
+    sobel_image = sobel_operator(norm_image)
     
     #plt.imshow(sobel_image)
     #plt.show()
 
-    # Apply Edge Tracking Algorithm
-    edge_tracking_algorithm(image)
-
     # Get the MLP Classifier
-    clf = train_classifier()
+    mlp = train_classifier()
+    # Ploting image
+    plt.imshow(sobel_image)
+    plt.show()
+    # Apply Edge Tracking Algorithm
+    edge_tracking_algorithm(sobel_image, mode = 1, mlp = mlp)
 
     # write the result image
-    imageio.imwrite("result.jpg", sobel_image)
+    #imageio.imwrite("result.jpg", sobel_image)
     return True    
                     
 
 def train_classifier():
-    dataset = pd.read_csv('dataset.data', sep = ',')
-    x = dataset[:, [0, 1, 2, 3]]
+    dataset = pd.read_csv('dataset.data', sep = ',').values
+    print(dataset)
+    #x = dataset[:, [0, 1, 2, 3]]
+    #y = dataset[:, 4]
+    x = dataset[:, 0:4]
     y = dataset[:, 4]
+    print(x)
+    print(y)
     # Train the MLP Classifier
-    mlp = MLPClassifier(solver = 'sgd', hidden_layer_sizes=(4,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
+    x = normalize(x, 1)
+    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(4,), activation = 'logistic', max_iter = 300, tol = 1e-4, learning_rate_init = 0.001)
     mlp = mlp.fit(x, y)
     
     return mlp
+
 
 
 main()
