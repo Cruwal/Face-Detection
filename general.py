@@ -87,7 +87,7 @@ def sobel_operator(image):
 
 
 # Apply Edge Tracking Algorithm
-def edge_tracking_algorithm(image, mode, mlp, a):
+def edge_tracking_algorithm(image, integral_image, mode, mlp):
     print("Searching faces...")
     normalized_image = normalize(image, 1)
     #print(normalized_image)
@@ -111,6 +111,13 @@ def edge_tracking_algorithm(image, mode, mlp, a):
                                     mean = np.mean(subwindow)
                                     if(mean != 0):
                                         features = feature_extraction(normalized_subwindow)
+                                        features2 = feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom_right)
+                                        print("Feature padrao: ")
+                                        print(features)
+
+                                        print("\nFeature nova: ")
+                                        print(features2)
+                                        
                                         if(mode == 0):      # Classify manually subwindow
                                             classify_manually_subwindow(subwindow, features)
                                         elif(mode == 1):    # Check if the result is a face
@@ -141,7 +148,7 @@ def edge_tracking_algorithm(image, mode, mlp, a):
 
 # Generate the integral image for feature extraction
 def integral_image_algorithm(image):
-    new_image = np.zeros(image.shape, dtype=float)
+    new_image = np.zeros(image.shape, dtype=int)
 
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):
@@ -149,6 +156,57 @@ def integral_image_algorithm(image):
 
     return new_image        
 
+def sum_pixel(integral_image, x, y, width, height):
+    sum_value = integral_image[x + width - 1, y + height - 1]    #L4
+
+    if x > 0:   # L3
+        sum_value = sum_value - integral_image[x - 1, y - 1 + height]
+    if y > 0:   # L2
+        sum_value = sum_value - integral_image[x - 1 + width, y - 1]
+    if (x > 0 and y > 0):   # L1
+        sum_value = sum_value + integral_image[x - 1, y - 1]
+
+    return sum_value
+
+def feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom_right):
+    width = bottom_left[0] - top_left[0] + 1
+    height = top_right[1] - top_left[1] + 1
+    x_middle = width // 2
+    y_middle = height // 2
+
+    # used in odd matrix (only in diagonal feature)
+    x_rest = bottom_left[0] - width + x_middle
+    y_rest = top_right[1] - height + y_middle
+
+    all_rectangle = sum_pixel(integral_image, top_left[0], top_left[1], width, height)
+    print(all_rectangle)
+
+    #horizontal feature: sum of all rectangle - sum of bottom part
+    horizontal_feature = all_rectangle - sum_pixel(integral_image, top_left[0] + x_middle, top_left[1], x_middle, height)
+
+    # vertical feature: sum of all rectangle - sum of left part
+    vertical_feature = all_rectangle - sum_pixel(integral_image, top_left[0], top_left[1], width, y_middle)
+
+    # diagonal feature: sum all rectangle - sum of primary diagonal
+    diag = sum_pixel(integral_image, top_left[0], top_left[1], x_middle, y_middle)
+    diag += sum_pixel(integral_image, top_left[0] + x_middle, top_left[1] + y_middle, x_rest, y_rest)
+    diag_feature = all_rectangle - diag
+
+    #Three vertical feature: sum all rectangle - sum of side parts
+    three_div = (height + 1) // 3
+    y_rest = top_right[1] - height + 2 * three_div
+
+    side = sum_pixel(integral_image, top_left[0], top_left[1], width, three_div)
+    print("Parte1: ")
+    print(side)
+    print("Posicao parte2: ")
+    print(top_left[1] + 2 * three_div)
+    side += sum_pixel(integral_image, top_left[0], top_left[1] + 2 * three_div, width, y_rest)
+    three_vertical_feature = all_rectangle - side
+
+    result = np.array([horizontal_feature, vertical_feature, diag_feature, three_vertical_feature])
+    print(result)
+    return result
 
 def feature_extraction(image):
     integral_image = integral_image_algorithm(image)

@@ -25,7 +25,7 @@ def main():
     # Reading filename and opening the image
     #filename = str(input()).rstrip()
     # Original image
-    filename = "BioID_0194.pgm"
+    filename = "BioID_0001.pgm"
     #image_input = io.imread(filename)
     # Grayscale image
     image = io.imread(filename, as_gray = True).astype(int)
@@ -34,13 +34,18 @@ def main():
     plt.imshow(image_input)
     plt.show()
     # Apply 2D Median Filter
-    image = two_d_median_filter(3, image).astype(int)
+    median_image = two_d_median_filter(3, image).astype(int)
+    # imageio.imwrite("median.jpg", median_image)
 
     # Apply Histogram Equalization
-    image = histogram_equalization(image)
+    histogram_image = histogram_equalization(median_image)
+    # imageio.imwrite("equalization.jpg", histogram_image)
+
     
     #norm_image = normalize(image, 255)
-    sobel_image = sobel_operator(image)
+    sobel_image = sobel_operator(histogram_image)
+    imageio.imwrite("sobel.jpg", sobel_image)
+
     
     #plt.imshow(sobel_image)
     #plt.show()
@@ -56,7 +61,7 @@ def main():
     plt.imshow(output_image)
     plt.show()
     # write the result image
-    #imageio.imwrite("result.jpg", sobel_image)
+    imageio.imwrite("result.jpg", output_image)
     return True    
                     
 
