@@ -87,14 +87,18 @@ def sobel_operator(image):
 
 
 # Apply Edge Tracking Algorithm
-def edge_tracking_algorithm(image, integral_image, mode, mlp):
+def edge_tracking_algorithm(image, mode, b):
     print("Searching faces...")
     normalized_image = normalize(image, 1)
     #print(normalized_image)
     counter = 0
     regions = []
-    for x in range(50, image.shape[0]):
-        for y in range(100, image.shape[1]):
+    for x in range(0, image.shape[0], 25):
+        if(counter > 100 and mode == 1):
+            break
+        for y in range(0, image.shape[1], 25):
+            if(counter > 100 and mode == 1):
+                break
             if(image[x][y] != 0):
                 top_left = (x, y)
                 for j in range(y, image.shape[1]):
@@ -111,40 +115,50 @@ def edge_tracking_algorithm(image, integral_image, mode, mlp):
                                     mean = np.mean(subwindow)
                                     if(mean != 0):
                                         features = feature_extraction(normalized_subwindow)
-                                        features2 = feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom_right)
+                                        #features2 = feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom_right)
                                         print("Feature padrao: ")
                                         print(features)
 
-                                        print("\nFeature nova: ")
-                                        print(features2)
+                                        #print("\nFeature nova: ")
+                                        #print(features2)
                                         
                                         if(mode == 0):      # Classify manually subwindow
                                             classify_manually_subwindow(subwindow, features)
                                         elif(mode == 1):    # Check if the result is a face
                                             #features = np.asarray(a[counter]).reshape(1, -1)
                                             #print(counter)
-                                            features = features.reshape(1, -1)
+                                            #features = features.reshape(1, -1)
+                                            features = features.reshape(1, 4)
                                             counter += 1
-                                            b = np.append(a, features, axis = 0)
-                                            b = normalize(b, 1)
+                                            #print(features.shape)
+                                            #print(features)
+                                            #print(b)
+                                            b = np.append(b, features, axis = 0)
+                                            #counter += 1
+                                            #b = normalize(b, 1)
                                             #features = normalize(features, 1).reshape(1, -1)
-                                            features = np.asarray(b[b.shape[0] - 1]).reshape(1, -1)
+                                            #features = np.asarray(b[b.shape[0] - 1]).reshape(1, -1)
                                             #a = np.delete(a, a.shape[0] - 1, 0)
                                             #features = features.reshape(1, -1)
                                             #print(features)
                                             #print(a)
-                                            r = mlp.predict(features)
+                                            #r = mlp.predict(features)
                                             #print(y[0])
                                             #print("(", x, ",", y, ")")
-                                            if(r[0] == 1):
+                                            #if(r[0] == 1):
                                                 # Ploting image
                                                 #plt.imshow(subwindow)
                                                 #plt.show()
-                                                region = [top_left, top_right, bottom_left, bottom_right]
-                                                regions.append(region)
-                                                if(counter > 15):
-                                                    return regions
-    return regions
+                                            print("Analysing ", counter, "st subwindow")
+                                            region = [top_left, top_right, bottom_left, bottom_right]
+                                            regions.append(region)
+                                                
+    if(mode == 1):  # Predicting
+        b = normalize(b, 1)
+        a = b[b.shape[0] - counter: b.shape[0], :]  # Added entries
+        b = b[0:b.shape[0] - counter, :]            # Dataset values
+        
+        return regions, a, b                       # Regions, New entries, Original entries
 
 # Generate the integral image for feature extraction
 def integral_image_algorithm(image):

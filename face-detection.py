@@ -25,7 +25,7 @@ def main():
     # Reading filename and opening the image
     #filename = str(input()).rstrip()
     # Original image
-    filename = "BioID_0001.pgm"
+    filename = "BioID_0000.pgm"
     #image_input = io.imread(filename)
     # Grayscale image
     image = io.imread(filename, as_gray = True).astype(int)
@@ -50,13 +50,24 @@ def main():
     #plt.imshow(sobel_image)
     #plt.show()
 
-    # Get the MLP Classifier
-    mlp, x, a = train_classifier()
-    
+    # Read dataset
+    x, y = read_dataset()
     # Apply Edge Tracking Algorithm
-    regions = edge_tracking_algorithm(sobel_image, 1, mlp, a)
+    regions, a, new_x = edge_tracking_algorithm(sobel_image, mode = 1, b = x)
+    
+    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
+    mlp = mlp.fit(new_x, y)
 
-    output_image = define_face(image_input, regions[len(regions)-1][0][0], regions[len(regions)-1][2][0], regions[len(regions)-1][2][1], regions[len(regions)-1][1][1])
+    print(a)
+    y_pred = mlp.predict(a)
+
+    regions_to_show = []
+    for i in range(len(y_pred)):
+        if(y_pred[i] == 1):
+            regions_to_show.append(regions[i])
+
+    # Ploting the last found value
+    output_image = define_face(image_input, regions_to_show[len(regions_to_show)-1][0][0], regions_to_show[len(regions_to_show)-1][2][0], regions_to_show[len(regions_to_show)-1][2][1], regions_to_show[len(regions_to_show)-1][1][1])
     # Ploting image
     plt.imshow(output_image)
     plt.show()
@@ -65,22 +76,24 @@ def main():
     return True    
                     
 
-def train_classifier():
+def read_dataset():
+    #if(x == -1):
     dataset = pd.read_csv('dataset.data', sep = ',').values
     #print(dataset)
     #x = dataset[:, [0, 1, 2, 3]]
     #y = dataset[:, 4]
     x = dataset[:, 0:4]
-    a = x
+    #a = x
     y = dataset[:, 4]
     #print(x)
     #print(y)
     # Train the MLP Classifier
-    x = normalize(x, 1)
-    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
-    mlp = mlp.fit(x, y)
-    return mlp, x, a
-
+    #x = normalize(x, 1)
+    #mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
+    #mlp = mlp.fit(x, y)
+    return x, y
+    #else:
+        
     '''
     skf = StratifiedKFold(n_splits=10)
     
@@ -113,7 +126,7 @@ def train_classifier():
     #mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(4,), activation = 'logistic', max_iter = 300, tol = 1e-4, learning_rate_init = 0.001)
     #mlp = mlp.fit(x, y)
     
-    return mlp
+    #return mlp
 
 def define_face(image, xmin, xmax, ymin, ymax):
     value = 255
@@ -135,3 +148,17 @@ def define_face(image, xmin, xmax, ymin, ymax):
     return face_image
 
 main()
+
+
+
+'''
+Se criando dataset:
+    Pega as features e insere, não precisa de MLP
+Se lendo:
+    Pega todas as features
+    Adiciona ao dataset
+    Normaliza o dataset
+    Prevê os últimos 50?
+    Mostra um dos últimos 50
+'''
+
