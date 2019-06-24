@@ -32,27 +32,22 @@ def main():
         #print(sobel_image)
         # Apply Edge Tracking Algorithm
 
-        test_image = np.array([[1, 3, 7, 5, 1], [12, 4, 8, 2, 1], [0, 14, 16, 9, 1], [5, 11, 6, 10, 1]])
 
-        #integral_image = integral_image_algorithm(test_image)
-        #print(integral_image)
-        # sum_pixel(integral_image, 0, 0, 4, 4)
-        TL = (1, 1)
-        TR = (1, 4)
-        BL = (3, 1)
-        BR = (3, 4)
+        integral_image = integral_image_algorithm(sobel_image)
+
 
         #feature_extraction2(integral_image, TL, TR, BL, BR)
 
         # Ploting image
         # plt.imshow(sobel_image)
         # plt.show()
-        edge_tracking_algorithm(sobel_image, mode = 0, mlp = 0)
+        
         mlp = 0
         mode = 0
+        edge_tracking_algorithm(sobel_image, integral_image, mode, mlp)
+        
         # defined_image = define_face(sobel_image, 50, 200, 50, 300)
         # imageio.imwrite("result.jpg", defined_image)
-        # edge_tracking_algorithm(sobel_image, integral_image, mode, mlp)
 
 
 main()

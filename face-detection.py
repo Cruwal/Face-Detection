@@ -25,13 +25,13 @@ def main():
     # Reading filename and opening the image
     #filename = str(input()).rstrip()
     # Original image
-    filename = "BioID_0000.pgm"
+    filename = "BioID_0001.pgm"
     #image_input = io.imread(filename)
     # Grayscale image
     image = io.imread(filename, as_gray = True).astype(int)
     image_input = io.imread(filename, as_gray = True).astype(int)
     # Ploting image
-    plt.imshow(image_input)
+    plt.imshow(image_input, cmap="gray")
     plt.show()
     # Apply 2D Median Filter
     median_image = two_d_median_filter(3, image).astype(int)
@@ -46,6 +46,7 @@ def main():
     sobel_image = sobel_operator(histogram_image)
     imageio.imwrite("sobel.jpg", sobel_image)
 
+    integral_image = integral_image_algorithm(sobel_image)
     
     #plt.imshow(sobel_image)
     #plt.show()
@@ -53,7 +54,7 @@ def main():
     # Read dataset
     x, y = read_dataset()
     # Apply Edge Tracking Algorithm
-    regions, a, new_x = edge_tracking_algorithm(sobel_image, mode = 1, b = x)
+    regions, a, new_x = edge_tracking_algorithm(sobel_image, integral_image, mode = 1, b = x)
     
     mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
     mlp = mlp.fit(new_x, y)
@@ -66,10 +67,13 @@ def main():
         if(y_pred[i] == 1):
             regions_to_show.append(regions[i])
 
+    if (len(regions_to_show) == 0):
+        print("\n\nLISTA VAZIA!!\n\n")
+
     # Ploting the last found value
     output_image = define_face(image_input, regions_to_show[len(regions_to_show)-1][0][0], regions_to_show[len(regions_to_show)-1][2][0], regions_to_show[len(regions_to_show)-1][2][1], regions_to_show[len(regions_to_show)-1][1][1])
     # Ploting image
-    plt.imshow(output_image)
+    plt.imshow(output_image, cmap="gray")
     plt.show()
     # write the result image
     imageio.imwrite("result.jpg", output_image)
@@ -131,6 +135,7 @@ def read_dataset():
 def define_face(image, xmin, xmax, ymin, ymax):
     value = 255
 
+    print("\n\nEntrou em define face\n\n")
     face_image = np.copy(image)
 
     # defining the top of rectangle
