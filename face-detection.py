@@ -24,15 +24,19 @@ def main():
 
     # Reading filename and opening the image
     #filename = str(input()).rstrip()
+    
     # Original image
-    filename = "BioID_0001.pgm"
+    filename = "BioID_0000.pgm"
     #image_input = io.imread(filename)
+    
     # Grayscale image
     image = io.imread(filename, as_gray = True).astype(int)
     image_input = io.imread(filename, as_gray = True).astype(int)
+    
     # Ploting image
     plt.imshow(image_input, cmap="gray")
     plt.show()
+    
     # Apply 2D Median Filter
     median_image = two_d_median_filter(3, image).astype(int)
     # imageio.imwrite("median.jpg", median_image)
@@ -41,7 +45,6 @@ def main():
     histogram_image = histogram_equalization(median_image)
     # imageio.imwrite("equalization.jpg", histogram_image)
 
-    
     #norm_image = normalize(image, 255)
     sobel_image = sobel_operator(histogram_image)
     imageio.imwrite("sobel.jpg", sobel_image)
@@ -67,16 +70,22 @@ def main():
         if(y_pred[i] == 1):
             regions_to_show.append(regions[i])
 
-    if (len(regions_to_show) == 0):
-        print("\n\nLISTA VAZIA!!\n\n")
+
+    print("\n\nLISTA TAM:")
+    print(len(regions_to_show)-1)
+    print("\n\n")
 
     # Ploting the last found value
-    output_image = define_face(image_input, regions_to_show[len(regions_to_show)-1][0][0], regions_to_show[len(regions_to_show)-1][2][0], regions_to_show[len(regions_to_show)-1][2][1], regions_to_show[len(regions_to_show)-1][1][1])
-    # Ploting image
-    plt.imshow(output_image, cmap="gray")
-    plt.show()
-    # write the result image
-    imageio.imwrite("result.jpg", output_image)
+    if len(regions_to_show) == 0:
+        print("\n\nCouldn't find any face!\n\n")
+    else:
+        output_image = define_face(image_input, regions_to_show[len(regions_to_show)-1][0][0], regions_to_show[len(regions_to_show)-1][2][0], regions_to_show[len(regions_to_show)-1][2][1], regions_to_show[len(regions_to_show)-1][1][1])
+        # Ploting image
+        plt.imshow(output_image, cmap="gray")
+        plt.show()
+        # write the result image
+        imageio.imwrite("result.jpg", output_image)
+    
     return True    
                     
 
@@ -135,7 +144,6 @@ def read_dataset():
 def define_face(image, xmin, xmax, ymin, ymax):
     value = 255
 
-    print("\n\nEntrou em define face\n\n")
     face_image = np.copy(image)
 
     # defining the top of rectangle

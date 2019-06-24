@@ -9,6 +9,7 @@ import math
 import imageio
 import matplotlib.pyplot as plt
 from skimage import io
+from skimage import exposure
 import csv
 
 # 2D Median Filter
@@ -87,17 +88,16 @@ def sobel_operator(image):
 
 
 # Apply Edge Tracking Algorithm
-def edge_tracking_algorithm(image, mode, b):
+def edge_tracking_algorithm(image, integral_image, mode, b):
     print("Searching faces...")
     normalized_image = normalize(image, 1)
     #print(normalized_image)
+
     counter = 0
     regions = []
-    for x in range(0, image.shape[0], 25):
-        if(counter > 100 and mode == 1):
-            break
-        for y in range(0, image.shape[1], 25):
-            if(counter > 100 and mode == 1):
+    for x in range(0, image.shape[0], 5):
+        for y in range(0, image.shape[1], 5):
+            if(counter > 30000 and mode == 1):
                 break
             if(image[x][y] != 0):
                 top_left = (x, y)
@@ -114,43 +114,21 @@ def edge_tracking_algorithm(image, mode, b):
                                 if(subwindow.shape[0] > 43 and subwindow.shape[1] > 58):
                                     mean = np.mean(subwindow)
                                     if(mean != 0):
-                                        features = feature_extraction(normalized_subwindow)
-                                        #features2 = feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom_right)
-                                        print("Feature padrao: ")
-                                        print(features)
+                                        features = feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom_right)
 
-                                        #print("\nFeature nova: ")
-                                        #print(features2)
+                                        print("\nFeature nova: ")
+                                        print(features)
                                         
                                         if(mode == 0):      # Classify manually subwindow
                                             classify_manually_subwindow(subwindow, features)
                                         elif(mode == 1):    # Check if the result is a face
-                                            #features = np.asarray(a[counter]).reshape(1, -1)
-                                            #print(counter)
-                                            #features = features.reshape(1, -1)
                                             features = features.reshape(1, 4)
                                             counter += 1
-                                            #print(features.shape)
-                                            #print(features)
-                                            #print(b)
                                             b = np.append(b, features, axis = 0)
-                                            #counter += 1
-                                            #b = normalize(b, 1)
-                                            #features = normalize(features, 1).reshape(1, -1)
-                                            #features = np.asarray(b[b.shape[0] - 1]).reshape(1, -1)
-                                            #a = np.delete(a, a.shape[0] - 1, 0)
-                                            #features = features.reshape(1, -1)
-                                            #print(features)
-                                            #print(a)
-                                            #r = mlp.predict(features)
-                                            #print(y[0])
-                                            #print("(", x, ",", y, ")")
-                                            #if(r[0] == 1):
-                                                # Ploting image
-                                                #plt.imshow(subwindow)
-                                                #plt.show()
+
                                             print("Analysing ", counter, "st subwindow")
                                             region = [top_left, top_right, bottom_left, bottom_right]
+
                                             regions.append(region)
                                                 
     if(mode == 1):  # Predicting
@@ -188,12 +166,13 @@ def feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom
     x_middle = width // 2
     y_middle = height // 2
 
+    # print([bottom_left[0], top_left[0], x_middle])
     # used in odd matrix (only in diagonal feature)
-    x_rest = bottom_left[0] - width + x_middle
-    y_rest = top_right[1] - height + y_middle
+    x_rest = bottom_left[0] - (x_middle + top_left[0])
+    y_rest = top_right[1] - (y_middle + top_left[1])
 
     all_rectangle = sum_pixel(integral_image, top_left[0], top_left[1], width, height)
-    print(all_rectangle)
+    # print(all_rectangle)
 
     #horizontal feature: sum of all rectangle - sum of bottom part
     horizontal_feature = all_rectangle - sum_pixel(integral_image, top_left[0] + x_middle, top_left[1], x_middle, height)
@@ -203,23 +182,24 @@ def feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom
 
     # diagonal feature: sum all rectangle - sum of primary diagonal
     diag = sum_pixel(integral_image, top_left[0], top_left[1], x_middle, y_middle)
+
+    # t = np.array([width, height, x_rest, y_rest])
+    # print(t)
+    # print("\n\n")
+
     diag += sum_pixel(integral_image, top_left[0] + x_middle, top_left[1] + y_middle, x_rest, y_rest)
+    # print("Executando three vertical\n\n")
     diag_feature = all_rectangle - diag
 
     #Three vertical feature: sum all rectangle - sum of side parts
     three_div = (height + 1) // 3
-    y_rest = top_right[1] - height + 2 * three_div
+    y_rest = top_right[1] - (2 * three_div + top_left[1])
 
     side = sum_pixel(integral_image, top_left[0], top_left[1], width, three_div)
-    print("Parte1: ")
-    print(side)
-    print("Posicao parte2: ")
-    print(top_left[1] + 2 * three_div)
     side += sum_pixel(integral_image, top_left[0], top_left[1] + 2 * three_div, width, y_rest)
     three_vertical_feature = all_rectangle - side
 
     result = np.array([horizontal_feature, vertical_feature, diag_feature, three_vertical_feature])
-    print(result)
     return result
 
 def feature_extraction(image):

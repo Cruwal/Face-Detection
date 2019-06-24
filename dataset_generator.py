@@ -25,29 +25,13 @@ def main():
         image = histogram_equalization(image)
 
         # Apply sobel algorithm
-        #norm_image = normalize(image, 255)
         sobel_image = sobel_operator(image)
-        # write the result image
-        #imageio.imwrite("result.jpg", sobel_image)
-        #print(sobel_image)
-        # Apply Edge Tracking Algorithm
-
 
         integral_image = integral_image_algorithm(sobel_image)
 
-
-        #feature_extraction2(integral_image, TL, TR, BL, BR)
-
-        # Ploting image
-        # plt.imshow(sobel_image)
-        # plt.show()
         
         mlp = 0
         mode = 0
         edge_tracking_algorithm(sobel_image, integral_image, mode, mlp)
-        
-        # defined_image = define_face(sobel_image, 50, 200, 50, 300)
-        # imageio.imwrite("result.jpg", defined_image)
-
 
 main()
