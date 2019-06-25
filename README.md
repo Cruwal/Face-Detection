@@ -41,7 +41,7 @@ The following is an example of an input image.
 
 The following is an example of the desired output image, based on the previous input image.
 
-![Screenshot](images/0194_result.pgm)
+![Screenshot](images/0194_result.png)
 
 
 # Steps
