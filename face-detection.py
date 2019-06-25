@@ -58,7 +58,7 @@ def main():
     # Apply Edge Tracking Algorithm
     regions, a, new_x = edge_tracking_algorithm(sobel_image, integral_image, mode = 1, b = x)
     
-    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(30,10), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
+    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
     mlp = mlp.fit(new_x, y)
 
     print(a)

@@ -95,9 +95,9 @@ def edge_tracking_algorithm(image, integral_image, mode, b):
 
     counter = 0
     regions = []
-    for x in range(0, image.shape[0], 3):
-        for y in range(0, image.shape[1], 3):
-            if(counter > 50000 and mode == 1):
+    for x in range(0, image.shape[0], 5):
+        for y in range(0, image.shape[1], 5):
+            if(counter > 40000 and mode == 1):
                 break
             if(image[x][y] != 0):
                 top_left = (x, y)

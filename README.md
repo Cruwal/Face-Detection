@@ -35,25 +35,34 @@ This project focuses on a solution to the face detection problem with a system b
 The input is represented by an image containing one or more faces. The image can be either grayscale or colored. 
 The following is an example of an input image.
 
-![alt text](https://files.realpython.com/media/bla2.5577e4ec1f8e.jpg)
+![Screenshot](images/BioID_0194.pgm)
 
 ### Output example (objective)
 
 The following is an example of the desired output image, based on the previous input image.
 
-![alt text](https://files.realpython.com/media/bla3.0a8b11f62c76.jpg)
+![Screenshot](images/0194_result.pgm)
 
 
-# Current Status
+# Steps
 
-At the moment, the input image is already being read, and then the Median Filter is applied to remove noise. Besides that, contrast adjustment is made using Histogram Equalization.
-The image below represents an example of an input file.
+At the end of sobel operator the image obtained is as follow. An black white image with higher
+contrast so edges can be easily identified.
 
-![Screenshot](images/scarlett.jpg)
+![Screenshot](images/sobel.jpg)
 
-The image below, however, represents the application of the filters in the previous image.
+After an integral image is generated and is used together with Haar Features for identify the
+main characteristics of a potential face. This characteristics are send to a back Multilayer Perceptron to get the final result.
 
-![Screenshot](images/result.jpg)
+# Results
+
+At the end of the project several difficulties were encountered. Initially the processing time was very long due to the various background elements of the image, which could not be eliminated with the use of the threshold after the application of the sobel operator. The use of the algorithm in an application is impracticable. This difficulty was overcome with the use of the integral image, which made possible a great optimization in the time of exeuction. Another great difficulty lies in the generation of a quality dataset, where a great effort was applied and yet the result was not satisfactory. As you can see in the following pictures, there is a lot of room for improvement in the project.
+
+![Screenshot](images/problem1.jpg)
+![Screenshot](images/problem2.jpg)
+
+
+
 
 
 ## References
