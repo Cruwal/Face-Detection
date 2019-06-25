@@ -35,7 +35,7 @@ This project focuses on a solution to the face detection problem with a system b
 The input is represented by an image containing one or more faces. The image can be either grayscale or colored. 
 The following is an example of an input image.
 
-![Screenshot](images/BioID_0194.pgm)
+![Screenshot](images/input.jpg)
 
 ### Output example (objective)
 

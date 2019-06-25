@@ -32,6 +32,8 @@ def main():
     image = io.imread(filename, as_gray = True).astype(int)
     image_input = io.imread(filename, as_gray = True).astype(int)
     
+    imageio.imwrite("result.jpg", image_input)
+
     # Ploting image
     plt.imshow(image_input, cmap="gray")
     plt.show()
