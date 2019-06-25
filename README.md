@@ -59,6 +59,7 @@ main characteristics of a potential face. This characteristics are send to a bac
 At the end of the project several difficulties were encountered. Initially the processing time was very long due to the various background elements of the image, which could not be eliminated with the use of the threshold after the application of the sobel operator. The use of the algorithm in an application is impracticable. This difficulty was overcome with the use of the integral image, which made possible a great optimization in the time of exeuction. Another great difficulty lies in the generation of a quality dataset, where a great effort was applied and yet the result was not satisfactory. As you can see in the following pictures, there is a lot of chances for improvement in the project. In some images the box was a little bigger than the ideal.
 
 ![Screenshot](images/problem1.jpeg)
+
 ![Screenshot](images/problem2.jpg)
 
 
