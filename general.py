@@ -95,9 +95,9 @@ def edge_tracking_algorithm(image, integral_image, mode, b):
 
     counter = 0
     regions = []
-    for x in range(0, image.shape[0], 5):
-        for y in range(0, image.shape[1], 5):
-            if(counter > 30000 and mode == 1):
+    for x in range(0, image.shape[0], 3):
+        for y in range(0, image.shape[1], 3):
+            if(counter > 50000 and mode == 1):
                 break
             if(image[x][y] != 0):
                 top_left = (x, y)
@@ -110,7 +110,7 @@ def edge_tracking_algorithm(image, integral_image, mode, b):
                                 bottom_right = (i, j) #image[x][j]
                                 subwindow = image[top_left[0]:bottom_left[0] + 1, top_left[1]:top_right[1] + 1]
                                 normalized_subwindow = normalized_image[top_left[0]:bottom_left[0] + 1, top_left[1]:top_right[1] + 1]
-                                #print(subwindow.shape)
+                                
                                 if(subwindow.shape[0] > 43 and subwindow.shape[1] > 58):
                                     mean = np.mean(subwindow)
                                     if(mean != 0):
@@ -148,6 +148,7 @@ def integral_image_algorithm(image):
 
     return new_image        
 
+# Evaluate the of rectangle
 def sum_pixel(integral_image, x, y, width, height):
     sum_value = integral_image[x + width - 1, y + height - 1]    #L4
 
@@ -183,10 +184,6 @@ def feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom
     # diagonal feature: sum all rectangle - sum of primary diagonal
     diag = sum_pixel(integral_image, top_left[0], top_left[1], x_middle, y_middle)
 
-    # t = np.array([width, height, x_rest, y_rest])
-    # print(t)
-    # print("\n\n")
-
     diag += sum_pixel(integral_image, top_left[0] + x_middle, top_left[1] + y_middle, x_rest, y_rest)
     # print("Executando three vertical\n\n")
     diag_feature = all_rectangle - diag
@@ -200,46 +197,6 @@ def feature_extraction2(integral_image, top_left, top_right, bottom_left, bottom
     three_vertical_feature = all_rectangle - side
 
     result = np.array([horizontal_feature, vertical_feature, diag_feature, three_vertical_feature])
-    return result
-
-def feature_extraction(image):
-    integral_image = integral_image_algorithm(image)
-
-    horizontal_middle = image.shape[0] // 2
-    vertical_middle = image.shape[1] // 2
-
-    # horizontal feature
-    aux = np.sum(integral_image[0 : horizontal_middle, 0 : image.shape[1]]) 
-    aux1 = np.sum(integral_image[horizontal_middle : image.shape[0], 0 : image.shape[1]])
-    horizontal_feature = aux - aux1
-
-    # vertical feature
-    aux = np.sum(integral_image[0 : image.shape[0], 0 : vertical_middle])
-    aux1 = np.sum(integral_image[0 : image.shape[0], vertical_middle : image.shape[1]])
-    vertical_feature = aux1 - aux
-
-    # Sum first diagonal
-    diag = np.sum(integral_image[0 : horizontal_middle, 0 : vertical_middle])
-    diag1 = np.sum(integral_image[horizontal_middle : image.shape[0], vertical_middle : image.shape[1]])
-    diag = diag + diag1
-    
-    # Sum second diagonal
-    diag2 = np.sum(integral_image[0 : horizontal_middle, vertical_middle : image.shape[1]])
-    diag1 = np.sum(integral_image[horizontal_middle : image.shape[0], 0 : vertical_middle])
-    diag1 = diag1 + diag2
-
-    # Subtract diagonals
-    diag_feature = diag1 - diag
-
-    # Tree vertical
-    tree_div = image.shape[1] // 3
-    vertical_p1 = np.sum(integral_image[0 : image.shape[0], 0 : tree_div])
-    vertical_center = np.sum(integral_image[0 : image.shape[0], tree_div : 2 * tree_div + 1])
-    vertical_p2 = np.sum(integral_image[0 : image.shape[0], 2 * tree_div + 1 : image.shape[1]])
-
-    tree_vertical_feature = vertical_center - vertical_p1 + vertical_p2
-
-    result = np.array([horizontal_feature, vertical_feature, diag_feature, tree_vertical_feature])
     return result
 
 

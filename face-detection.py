@@ -20,14 +20,13 @@ from sklearn.metrics import accuracy_score
 from general import *
 
 def main():
-    #print("Type the name of the image...")
+    print("Type the name of the image...")
 
     # Reading filename and opening the image
-    #filename = str(input()).rstrip()
+    filename = str(input()).rstrip()
     
     # Original image
-    filename = "BioID_0000.pgm"
-    #image_input = io.imread(filename)
+    # filename = "BioID_0000.pgm"
     
     # Grayscale image
     image = io.imread(filename, as_gray = True).astype(int)
@@ -59,16 +58,24 @@ def main():
     # Apply Edge Tracking Algorithm
     regions, a, new_x = edge_tracking_algorithm(sobel_image, integral_image, mode = 1, b = x)
     
-    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
+    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(30,10), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
     mlp = mlp.fit(new_x, y)
 
     print(a)
     y_pred = mlp.predict(a)
 
+    min_area = float("inf")
     regions_to_show = []
     for i in range(len(y_pred)):
         if(y_pred[i] == 1):
             regions_to_show.append(regions[i])
+            area = (regions_to_show[len(regions_to_show)-1][2][0] - regions_to_show[len(regions_to_show)-1][0][0]) * (regions_to_show[len(regions_to_show)-1][1][1] - regions_to_show[len(regions_to_show)-1][2][1])
+            if area < min_area:
+                min_area = area
+                xmin = regions_to_show[len(regions_to_show)-1][0][0]
+                xmax = regions_to_show[len(regions_to_show)-1][2][0]
+                ymin = regions_to_show[len(regions_to_show)-1][2][1]
+                ymax = regions_to_show[len(regions_to_show)-1][1][1]
 
 
     print("\n\nLISTA TAM:")
@@ -79,7 +86,7 @@ def main():
     if len(regions_to_show) == 0:
         print("\n\nCouldn't find any face!\n\n")
     else:
-        output_image = define_face(image_input, regions_to_show[len(regions_to_show)-1][0][0], regions_to_show[len(regions_to_show)-1][2][0], regions_to_show[len(regions_to_show)-1][2][1], regions_to_show[len(regions_to_show)-1][1][1])
+        output_image = define_face(image_input, xmin, xmax, ymin, ymax)
         # Ploting image
         plt.imshow(output_image, cmap="gray")
         plt.show()
@@ -90,56 +97,11 @@ def main():
                     
 
 def read_dataset():
-    #if(x == -1):
     dataset = pd.read_csv('dataset.data', sep = ',').values
-    #print(dataset)
-    #x = dataset[:, [0, 1, 2, 3]]
-    #y = dataset[:, 4]
     x = dataset[:, 0:4]
-    #a = x
     y = dataset[:, 4]
-    #print(x)
-    #print(y)
-    # Train the MLP Classifier
-    #x = normalize(x, 1)
-    #mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(10,), activation = 'logistic', max_iter = 200, tol = 1e-4, learning_rate_init = 0.001)
-    #mlp = mlp.fit(x, y)
     return x, y
-    #else:
-        
-    '''
-    skf = StratifiedKFold(n_splits=10)
-    
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.20, shuffle = True, stratify = y)
-    mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(100,), activation = 'logistic', max_iter = 400, tol = 1e-4, learning_rate_init = 0.001)
-    mlp = mlp.fit(x_train, y_train)
 
-    y_pred = mlp.predict(x_test)
-    score = accuracy_score(y_pred, y_test)
-    print("Acuracia = ", score)
-    print(np.max(y_pred))
-    print(np.mean(y_pred))
-
-    acuracia = []
-    for train_index, test_index in skf.split(x, y):
-        x_train = x[train_index]
-        y_train = y[train_index]
-        
-        x_test = x[test_index]
-        y_test = y[test_index]
-        
-        y_pred = mlp.predict(x_test)
-        print(y_pred)
-        #for(i in range(len(y_pred))):
-        #    if(y_pred[i] == 1 or y_pred[i])
-        score = mlp.score(x_test, y_test)
-  
-        acuracia.append(score)
-    print("Acuracia = ", np.mean(acuracia))'''
-    #mlp = MLPClassifier(solver = 'adam', hidden_layer_sizes=(4,), activation = 'logistic', max_iter = 300, tol = 1e-4, learning_rate_init = 0.001)
-    #mlp = mlp.fit(x, y)
-    
-    #return mlp
 
 def define_face(image, xmin, xmax, ymin, ymax):
     value = 255
